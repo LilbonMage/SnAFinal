@@ -1,17 +1,22 @@
 import requests
 import pandas as pd
 import time
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-API_KEY = 'AIzaSyAoE-J1zBrpIG0l4lpSJnZN4qwvTCjKUk0'  # 🔁 換成你的 API 金鑰
+API_KEY = os.getenv("YOUTUBE_API_KEY")  # 🔁 換成你的 API 金鑰
 VIDEO_IDS = [
     'kdf3QRXg6jo',
+    'LekeacQaQhg',
     'TLQitdKrUm8',
+    'H8WWIfCeWI0',
     'l56zOTnUFdw',
     'QT7lzdT_6YE',
     's5zW5IHcLi8'
 ]
 
-def get_comments_for_video(video_id, api_key, max_results=500):
+def get_comments_for_video(video_id, api_key, max_results=100):
     comments = []
     url = f'https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={video_id}&key={api_key}&maxResults=100'
     count = 0
