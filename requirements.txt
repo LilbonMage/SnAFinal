@@ -1,0 +1,6 @@
+hdbscan==0.8.40
+pandas==2.3.0
+python-dotenv==1.1.0
+Requests==2.32.3
+sentence_transformers==4.1.0
+transformers==4.52.4
