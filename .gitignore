@@ -1,3 +1,4 @@
 .env
 *output*
 fetched_comments/
+__pycache__/
