@@ -1,24 +1,41 @@
-from openai import OpenAI
 import os
 from dotenv import load_dotenv
 load_dotenv()
+import requests
 
-client = OpenAI(
-  base_url = "https://integrate.api.nvidia.com/v1",
-  api_key = os.getenv("NVIDIA_API_KEY")
-)
+# LLM 設定
+invoke_url = "https://integrate.api.nvidia.com/v1/chat/completions"
+stream = False
 
-completion = client.chat.completions.create(
-  model="nvidia/llama-3.1-nemotron-ultra-253b-v1",
-  messages=[{"role":"system","content":"detailed thinking on"}, {"role":"user","content":"你能回答中文嗎?"}],
-  temperature=0.6,
-  top_p=0.95,
-  max_tokens=4096,
-  frequency_penalty=0,
-  presence_penalty=0,
-  stream=True
-)
+headers = {
+  "Authorization": "Bearer " + os.getenv("NVIDIA_API_KEY"),
+  "Accept": "text/event-stream" if stream else "application/json"
+}
 
-for chunk in completion:
-  if chunk.choices[0].delta.content is not None:
-    print(chunk.choices[0].delta.content, end="")
+def inference_gemma_3_1b_it(prompt, comment):
+    payload = {
+        "model": "google/gemma-3-1b-it",
+        "messages": [{"role":"system","content":prompt},
+                     {"role":"user","content":f"comment:\n\n「{comment}」"}],
+        "max_tokens": 512,
+        "temperature": 0,
+        "top_p": 0.95,
+        "stream": False
+    }
+    
+    response = requests.post(invoke_url, headers=headers, json=payload)
+
+    return response.json()['choices'][0]['message']['content'].strip()
+
+# Use a pipeline as a high-level helper
+from transformers import pipeline
+
+def inference_qwen3_0_6b(prompt, comment):
+    pipe = pipeline("text-generation", model="Qwen/Qwen3-0.6B")
+    messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": f"comment:\n\n「{comment}」"}
+    ]
+    response = pipe(messages, max_length=512, do_sample=False)
+    print(response)
+    return response[0]['generated_text']
