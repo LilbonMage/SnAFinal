@@ -1,10 +1,12 @@
 # 分析留言
 ## 分析情緒與強度
 sentiment_prompt = f"""
-You are an expert sentiment analyst. Evaluate the sentiment of the following comment and classify it as either Positive, Negative, or Neutral. Additionally, rate the emotional intensity on a scale from 0 to 10, where 0 means neutral or calm, and 10 means extremely emotional or intense.
+You are an expert sentiment analyst.
+Evaluate the sentiment of the following comment and classify it as either Positive, Negative, or Neutral.
+Additionally, rate the emotional intensity on a scale from -10 to 10, where -10 means extremely negative, 0 means neutral or calm, and 10 means extremely positive.
 
 Respond strictly in the following format:
-[Sentiment / Intensity]
+Sentiment / Intensity
 Do not include any explanations, comments, or extra text.
 """
 
@@ -34,5 +36,5 @@ Examples:
 1. "You're a worthless idiot." → Malicious
 2. "This platform's policy is so frustrating." → Not Malicious
 
-Only respond with one of the two labels: Malicious or Not Malicious.
+Only respond with one of the two labels: Malicious or Not Malicious. Do not include any explanations, comments, or extra text.
 """
